@@ -55,7 +55,6 @@ class ProjectConfigDialog(QDialog):
         mainContainer.addLayout(newProjectControlContainer)
 
         self.setLayout(mainContainer)
-        self.show()
 
     def start(self):
         # TODO: Verify that all configuration is correctly setup
