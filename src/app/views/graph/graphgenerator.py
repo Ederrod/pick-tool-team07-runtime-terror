@@ -2,20 +2,9 @@ from QGraphViz.QGraphViz import QGraphViz
 from QGraphViz.DotParser import Graph
 from QGraphViz.Engines import Dot
 
-class GraphGenerator(object): 
-    __instance = None
+class GraphGenerator(object):
     def __init__(self): 
-        if GraphGenerator.__instance == None: 
-            GraphGenerator.__instance = self
-            self.setup()
-        else: 
-            raise Exception("Trying to create another instance of a signelton class")
-    
-    @staticmethod
-    def get_instance(): 
-        if GraphGenerator.__instance == None: 
-            GraphGenerator()
-        return GraphGenerator.__instance
+        self.setup()
 
     def setup(self):
         self.avlbIndex = 0

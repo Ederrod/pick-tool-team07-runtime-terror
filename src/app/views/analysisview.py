@@ -11,7 +11,7 @@ class AnalysisView(QWidget):
     def __init__(self, parent=None): 
         super(QWidget, self).__init__(parent)
         self.vectorManager = VectorManager.get_instance()
-        self.graphGeneartor = GraphGenerator.get_instance()
+        self.graphGenerator = GraphGenerator.get_instance()
         self.initUI()
 
     def initUI(self): 
@@ -82,8 +82,10 @@ class AnalysisView(QWidget):
 
     def setupGraph(self): 
         graph = self.graph
-        qgv = self.graphGeneartor.getGraph()
-        qgv.build()
+        if len(self.vectors.get_vectors()) != 0: 
+            self.graphGenerator.createGraphForVector()
+        self.graphGenerator.build()
+        qgv = self.graphGenerator.getGraph()
         graph.layout().addWidget(qgv)
 
     def nodeInvoked(self, node):

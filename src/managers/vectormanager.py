@@ -29,6 +29,12 @@ class VectorManager:
     def get_vectors(self): 
         return self.vectors
 
+    def get_vector_by_name(self, name): 
+        for vector in self.get_vectors(): 
+            if vector.getName() == name: 
+                return vector
+        return None
+
     def update_vector(self, vector_name, name, desc): 
         for vector in self.vectors: 
             if vector.getName() == vector_name: 
