@@ -59,6 +59,6 @@ class ProjectConfigDialog(QDialog):
 
     def start(self):
         # TODO: Verify that all configuration is correctly setup
-        self.parent.updateView()
+        self.parent.updateView(2)
         self.done(0)
 
