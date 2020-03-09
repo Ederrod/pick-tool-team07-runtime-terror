@@ -11,7 +11,6 @@ class AnalysisView(QWidget):
     def __init__(self, parent=None): 
         super(QWidget, self).__init__(parent)
         self.vectorManager = VectorManager.get_instance()
-        self.graphGenerator = GraphGenerator.get_instance()
         self.initUI()
 
     def initUI(self): 
@@ -82,10 +81,12 @@ class AnalysisView(QWidget):
 
     def setupGraph(self): 
         graph = self.graph
-        if len(self.vectors.get_vectors()) != 0: 
-            self.graphGenerator.createGraphForVector()
-        self.graphGenerator.build()
-        qgv = self.graphGenerator.getGraph()
+        graphGenerator = GraphGenerator()
+        # TODO: Get the selceted graph from Vector List View
+        # if len(self.vectors.getVectors()) != 0: 
+        #     graphGenerator.generateVectorGraph()
+        # graphGenerator.build()
+        qgv = graphGenerator.getGraph()
         graph.layout().addWidget(qgv)
 
     def nodeInvoked(self, node):
@@ -94,7 +95,7 @@ class AnalysisView(QWidget):
 
     # TODO: Figure out why this breaks and does not update the list view. 
     def updateVectorList(self):
-        vectors = self.vectorManager.get_vectors()
+        vectors = self.vectorManager.getVectors()
         for vector in vectors: 
             item = QListWidgetItem(vector.getName())
             self.vectorWidget.addItem(item)

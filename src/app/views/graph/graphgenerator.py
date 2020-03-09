@@ -12,6 +12,9 @@ class GraphGenerator(object):
         self.qgv = QGraphViz(node_invoked_callback=self.nodeInvoked)
         self.qgv.new(Dot(Graph("Main_Graph")))
 
+    def generateVectorGraph(self, vector):
+        pass 
+
     def addNode(self, name, label=(False, None)):
         if name == None: 
             name = "Node" + self.avlbIndex
