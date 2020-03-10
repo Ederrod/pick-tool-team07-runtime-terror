@@ -47,12 +47,12 @@ class AddWidget(QWidget):
         vec_desc = desc.toPlainText()
 
         if init_name == None or init_desc == None: 
-            self.vectormanager.add_vector(
+            self.vectormanager.addVector(
                     vec_name, 
                     vec_desc)
         else:
-            if self.vectormanager.vector_exists(init_name):
-                self.vectormanager.update_vector(init_name, vec_name, vec_desc)
+            if self.vectormanager.vectorExists(init_name):
+                self.vectormanager.updateVector(init_name, vec_name, vec_desc)
 
         self.parent.initUI()
 
@@ -121,11 +121,11 @@ class VectorConfigWidget(QWidget):
         if selected.hasSelection(): 
             indexes = selected.selectedIndexes()
             name = indexes[0].data()
-            self.vectorManager.delete_vector(name)
+            self.vectorManager.deleteVector(name)
             self.updateTable()
 
     def updateTable(self): 
-        vectors = self.vectorManager.get_vectors()
+        vectors = self.vectorManager.getVectors()
         self.model.removeRows(0, self.model.rowCount())
         
         for vector in vectors: 

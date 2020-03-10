@@ -5,7 +5,6 @@ from models.eventconfig import EventConfig
 
 class EventConfigManager: 
     __instance = None
-
     def __init__(self):
         if EventConfigManager.__instance == None: 
             EventConfigManager.__instance = self

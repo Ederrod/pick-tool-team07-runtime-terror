@@ -2,12 +2,12 @@ import sys
 sys.path.append("../..")
 from managers.vectormanager import VectorManager
 
-from PyQt5.QtWidgets import QWidget, QDialog,QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QTableView,\
-                            QTableWidget, QTabWidget, QListWidget, QListWidgetItem, QLineEdit, QComboBox, QSpacerItem, QSizePolicy, QAction
+from app.views.graph.graphgenerator import GraphGenerator
 
-from QGraphViz.QGraphViz import QGraphViz
-from QGraphViz.DotParser import Graph
-from QGraphViz.Engines import Dot
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QWidget, QDialog,QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QTableView,QTableWidget, QTabWidget,\
+                            QListWidget, QListWidgetItem, QLineEdit, QComboBox, QSpacerItem, QSizePolicy, QAction, QAbstractItemView
 
 class AnalysisView(QWidget): 
     def __init__(self, parent=None): 
@@ -28,8 +28,18 @@ class AnalysisView(QWidget):
         self.tabWidget.addTab(self.logEntriesTbl, "Log Entries")
         self.tabWidget.addTab(self.vectorTab, "Vector View")
 
+        # Label for our Vector List
+        vectorLbl = QListWidgetItem()
+        vectorLbl.setText("Vector Databases")
+        vectorLbl.setTextAlignment(Qt.AlignCenter)
+        vectorLbl.setFlags(Qt.NoItemFlags)
+
         # Defined Vectors list
         self.vectorWidget = QListWidget()
+        self.vectorWidget.setDragDropMode(QAbstractItemView.DragDrop)
+        self.vectorWidget.setAcceptDrops(True)
+        self.vectorWidget.addItem(vectorLbl)
+        self.vectorWidget.itemActivated.connect(self.setVectorSelected)
 
         self.workspace = QHBoxLayout()
         self.workspace.addWidget(self.vectorWidget, 10)
@@ -62,9 +72,6 @@ class AnalysisView(QWidget):
         self.vectorViews.addWidget(self.nodes, 30)
         self.vectorViews.addWidget(self.graph, 70)
 
-        # self.vwidget = QWidget()
-        # self.vwidget.setLayout(self.vectorViews)
-
         hSpacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.orientationCb = QComboBox()
         self.unitsCb = QComboBox()
@@ -85,38 +92,28 @@ class AnalysisView(QWidget):
         self.vectorTab.setLayout(self.container)
 
     def setupGraph(self): 
-        # TODO: Dynamically make graph, add a add, edit, and remove node buttons. 
         graph = self.graph
-        qgv = QGraphViz(node_invoked_callback=self.nodeInvoked)
-
-        qgv.new(Dot(Graph("Main_Graph")))
-
-        n1 = qgv.addNode(qgv.engine.graph, "Node1", label="N1")
-        n2 = qgv.addNode(qgv.engine.graph, "Node2", label="N2")
-        n3 = qgv.addNode(qgv.engine.graph, "Node3", label="N3")
-        n4 = qgv.addNode(qgv.engine.graph, "Node4", label="N4")
-        n5 = qgv.addNode(qgv.engine.graph, "Node5", label="N5")
-        n6 = qgv.addNode(qgv.engine.graph, "Node6", label="N6")
-
-        qgv.addEdge(n1, n2, {})
-        qgv.addEdge(n3, n2, {})
-        qgv.addEdge(n2, n4, {"width":2})
-        qgv.addEdge(n4, n5, {"width":4})
-        qgv.addEdge(n4, n6, {"width":5,"color":"red"})
-        qgv.addEdge(n3, n6, {"width":2})
-
-        qgv.build()
-        qgv.save("test.gv")
+        graphGenerator = GraphGenerator()
+        selectedVector = self.vectorManager.getCurrentVector()
+        if selectedVector: 
+            graphGenerator.generateVectorGraph(selectedVector)
+        graphGenerator.build()
+        qgv = graphGenerator.getGraph()
         graph.layout().addWidget(qgv)
 
-    def nodeInvoked(self, node):
-        d = QDialog(self)
-        d.show()
-
-    # TODO: Figure out why this breaks and does not update the list view. 
     def updateVectorList(self):
-        vectors = self.vectorManager.get_vectors()
+        vectors = self.vectorManager.getVectors()
         for vector in vectors: 
-            item = QListWidgetItem(vector.getName())
+            icon = QIcon()
+            icon.addPixmap(QPixmap("app/images/dbicon.png"), QIcon.Normal, QIcon.Off)
+            item = QListWidgetItem()
+            item.setText(vector.getName()) 
+            item.setIcon(icon)
+            item.setSizeHint(QSize(0, 50))
             self.vectorWidget.addItem(item)
+
+    def setVectorSelected(self, item): 
+        selVecName = item.text()
+        print(selVecName)
+        self.vectorManager.setCurrentVector(selVecName)
     

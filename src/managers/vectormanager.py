@@ -7,6 +7,7 @@ class VectorManager:
         if VectorManager.__instance == None: 
             VectorManager.__instance = self
             self.vectors = []
+            self.curVec = None
         else: 
             raise Exception("Trying to create another instance of a singelton class") 
     
@@ -16,28 +17,40 @@ class VectorManager:
             VectorManager()
         return VectorManager.__instance
 
-    def add_vector(self, name, desc): 
+    def addVector(self, name, desc): 
         v = Vector(name, desc)
         self.vectors.append(v)
 
-    def vector_exists(self, name): 
+    def vectorExists(self, name): 
         for vector in self.vectors: 
             if vector.getName() == name: 
                 return True
         return False
 
-    def get_vectors(self): 
+    def getVectors(self): 
         return self.vectors
 
-    def update_vector(self, vector_name, name, desc): 
+    def getVectorByName(self, name): 
+        for vector in self.getVectors(): 
+            if vector.getName() == name: 
+                return vector
+        return None
+
+    def updateVector(self, vector_name, name, desc): 
         for vector in self.vectors: 
             if vector.getName() == vector_name: 
                 vector.setName(name)
                 vector.setDesc(desc)
 
-    def delete_vector(self, name):
-        if self.vector_exists(name): 
+    def deleteVector(self, name):
+        if self.vectorExists(name): 
             for vector in self.vectors: 
                 if vector.getName() == name: 
                     self.vectors.remove(vector) 
                     del vector
+
+    def setCurrentVector(self, name):
+        self.curVec = self.getVectorByName(name) 
+
+    def getCurrentVector(self): 
+        return self.curVec

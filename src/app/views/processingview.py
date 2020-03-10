@@ -77,4 +77,4 @@ class ProcessingView(QWidget):
 
     # this will probably be removed once we update the MainWindow view structure
     def update(self): 
-        self.parent.updateView()
+        self.parent.updateView(1)

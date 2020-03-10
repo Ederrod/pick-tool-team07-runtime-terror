@@ -22,5 +22,8 @@ class Vector(object):
         # self.nodes.append()
         pass
 
+    def getNodes(self):
+        return nodes 
+
     def __str__(self): 
         return 'Vector(name='+self.name+', desc='+self.description+')'
