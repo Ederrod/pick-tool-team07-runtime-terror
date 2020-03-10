@@ -12,6 +12,22 @@ class GraphGenerator(object):
         self.qgv = QGraphViz(node_invoked_callback=self.nodeInvoked)
         self.qgv.new(Dot(Graph("Main_Graph")))
 
+        n1 = self.qgv.addNode(self.qgv.engine.graph, "Node1", label="N1")
+        n2 = self.qgv.addNode(self.qgv.engine.graph, "Node2", label="N2")
+        n3 = self.qgv.addNode(self.qgv.engine.graph, "Node3", label="N3")
+        n4 = self.qgv.addNode(self.qgv.engine.graph, "Node4", label="N4")
+        n5 = self.qgv.addNode(self.qgv.engine.graph, "Node5", label="N5")
+        n6 = self.qgv.addNode(self.qgv.engine.graph, "Node6", label="N6")
+
+        self.qgv.addEdge(n1, n2, {})
+        self.qgv.addEdge(n3, n2, {})
+        self.qgv.addEdge(n2, n4, {"width":2})
+        self.qgv.addEdge(n4, n5, {"width":4})
+        self.qgv.addEdge(n4, n6, {"width":5,"color":"red"})
+        self.qgv.addEdge(n3, n6, {"width":2})
+
+        self.build()
+
     def generateVectorGraph(self, vector):
         pass 
 

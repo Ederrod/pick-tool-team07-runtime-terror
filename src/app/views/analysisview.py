@@ -4,8 +4,10 @@ from managers.vectormanager import VectorManager
 
 from app.views.graph.graphgenerator import GraphGenerator
 
-from PyQt5.QtWidgets import QWidget, QDialog,QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QTableView,\
-                            QTableWidget, QTabWidget, QListWidget, QListWidgetItem, QLineEdit, QComboBox, QSpacerItem, QSizePolicy, QAction
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QWidget, QDialog,QFrame, QGridLayout, QHBoxLayout, QVBoxLayout, QTableView,QTableWidget, QTabWidget,\
+                            QListWidget, QListWidgetItem, QLineEdit, QComboBox, QSpacerItem, QSizePolicy, QAction, QAbstractItemView
 
 class AnalysisView(QWidget): 
     def __init__(self, parent=None): 
@@ -26,8 +28,18 @@ class AnalysisView(QWidget):
         self.tabWidget.addTab(self.logEntriesTbl, "Log Entries")
         self.tabWidget.addTab(self.vectorTab, "Vector View")
 
+        # Label for our Vector List
+        vectorLbl = QListWidgetItem()
+        vectorLbl.setText("Vector Databases")
+        vectorLbl.setTextAlignment(Qt.AlignCenter)
+        vectorLbl.setFlags(Qt.NoItemFlags)
+
         # Defined Vectors list
         self.vectorWidget = QListWidget()
+        self.vectorWidget.setDragDropMode(QAbstractItemView.DragDrop)
+        self.vectorWidget.setAcceptDrops(True)
+        self.vectorWidget.addItem(vectorLbl)
+        self.vectorWidget.itemActivated.connect(self.setVectorSelected)
 
         self.workspace = QHBoxLayout()
         self.workspace.addWidget(self.vectorWidget, 10)
@@ -82,21 +94,26 @@ class AnalysisView(QWidget):
     def setupGraph(self): 
         graph = self.graph
         graphGenerator = GraphGenerator()
-        # TODO: Get the selceted graph from Vector List View
-        # if len(self.vectors.getVectors()) != 0: 
-        #     graphGenerator.generateVectorGraph()
-        # graphGenerator.build()
+        selectedVector = self.vectorManager.getCurrentVector()
+        if selectedVector: 
+            graphGenerator.generateVectorGraph(selectedVector)
+        graphGenerator.build()
         qgv = graphGenerator.getGraph()
         graph.layout().addWidget(qgv)
 
-    def nodeInvoked(self, node):
-        d = QDialog(self)
-        d.show()
-
-    # TODO: Figure out why this breaks and does not update the list view. 
     def updateVectorList(self):
         vectors = self.vectorManager.getVectors()
         for vector in vectors: 
-            item = QListWidgetItem(vector.getName())
+            icon = QIcon()
+            icon.addPixmap(QPixmap("app/images/dbicon.png"), QIcon.Normal, QIcon.Off)
+            item = QListWidgetItem()
+            item.setText(vector.getName()) 
+            item.setIcon(icon)
+            item.setSizeHint(QSize(0, 50))
             self.vectorWidget.addItem(item)
+
+    def setVectorSelected(self, item): 
+        selVecName = item.text()
+        print(selVecName)
+        self.vectorManager.setCurrentVector(selVecName)
     

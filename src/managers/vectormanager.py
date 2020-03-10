@@ -7,6 +7,7 @@ class VectorManager:
         if VectorManager.__instance == None: 
             VectorManager.__instance = self
             self.vectors = []
+            self.curVec = None
         else: 
             raise Exception("Trying to create another instance of a singelton class") 
     
@@ -47,3 +48,9 @@ class VectorManager:
                 if vector.getName() == name: 
                     self.vectors.remove(vector) 
                     del vector
+
+    def setCurrentVector(self, name):
+        self.curVec = self.getVectorByName(name) 
+
+    def getCurrentVector(self): 
+        return self.curVec

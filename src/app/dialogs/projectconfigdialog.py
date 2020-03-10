@@ -38,13 +38,17 @@ class ProjectConfigDialog(QDialog):
         self.viewList.insertItem(3, "Vector Configuration")
         self.viewList.currentRowChanged.connect(lambda i : self.stack.setCurrentIndex(i))
 
-        self.startNewProject = QPushButton("Start New Project")
-        self.startNewProject.clicked.connect(self.start)
+        startNewProject = QPushButton("Start New Project")
+        startNewProject.clicked.connect(self.start)
+
+        cancel = QPushButton("Cancel")
+        cancel.clicked.connect(self.cancel)
         hSpacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         newProjectControlContainer = QHBoxLayout()
         newProjectControlContainer.addItem(hSpacer)
-        newProjectControlContainer.addWidget(self.startNewProject)
+        newProjectControlContainer.addWidget(cancel)
+        newProjectControlContainer.addWidget(startNewProject)
 
         viewContainer = QHBoxLayout()
         viewContainer.addWidget(self.viewList, 30)
@@ -59,5 +63,10 @@ class ProjectConfigDialog(QDialog):
     def start(self):
         # TODO: Verify that all configuration is correctly setup
         self.parent.updateView(2)
-        self.done(0)
+        self.accept()
+        # self.done(0)
+
+    def cancel(self): 
+        self.reject()
+        # self.done(0)
 
